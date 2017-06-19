@@ -1,0 +1,103 @@
+html{
+	height: 100%;
+}
+
+body{
+	font-family: 'Open Sans';
+	color: #fff;
+	font-size: 13px;
+	background: rgb(84, 100, 139);
+}
+.clear{
+	clear:both;
+	overflow: hidden;
+}
+.modal{
+	position: fixed;
+	top: 55px;
+	bottom: 55px;
+	left: 0;
+	right: 0;
+	background: rgba(0, 0, 0, 0.65);
+	z-index: 500;
+}
+.modal > .modalBox{
+	position: absolute;
+	top: 3%;
+	left: 2%;
+	right: 2%;
+	bottom: 3%;
+	background: #fff;
+	border-radius: 13px;
+	border: 1px solid black;
+	color: #000;
+}
+.modal > .modalBox > h3{
+	border-radius: 13px 13px 0 0;
+	font-size: 32px;
+	padding: 25px 15px;
+	background: rgb(236, 236, 236);
+}
+.modal > .modalBox > h3 >.done{
+	background-color: #35d020;
+	border-bottom: 3px solid #2db11b;
+	padding: 15px 30px;
+	color: #fff;
+	font-size: 16px;
+	text-transform: uppercase;
+	float: right;
+	font-weight: bold;
+	border-radius: 7px;
+	position: relative;
+	bottom: 8px;
+}
+.modal > .modalBox > h3 >.done.red{
+	background-color: #e22828;
+	border-bottom: 3px solid #c42424;
+}
+.modal > .modalBox > h4{
+	font-size: 24px;
+	padding: 0 15px;
+	margin-top: 25px;
+	font-weight: 300;
+}
+.modal > .modalBox > .form{
+	background-color: rgb(245,245,245);
+	padding: 15px;
+}
+.modal > .modalBox > .form label{
+	font-size: 14px;
+	text-transform: uppercase;
+	color: #A5A5A5;
+	padding: 5px 0 10px;
+	display: block;
+}
+.modal > .modalBox > .form input,
+.modal > .modalBox > .form select{
+	background: rgb(221, 221, 221);
+	border: 1px solid rgb(202, 202, 202);
+	color: #000;
+	font-size: 24px;
+	box-sizing: border-box;
+	width: 100%;
+	margin: 0;
+	padding: 10px;
+}
+.modal > .modalBox > .form input:focus,
+.modal > .modalBox > .form select:focus{
+	outline: 0;
+	border-bottom: 2px solid #fff;
+}
+.remove{
+	color: #fff;
+	background-color: #e22828;
+	border-bottom: 3px solid #c42424;
+	padding: 15px 20px;
+	display: inline-block;
+	line-height: 0;
+	font-size: 15px;
+	text-transform: uppercase;
+	position: relative;
+	bottom: 2px;
+	margin-left: 45px;
+}

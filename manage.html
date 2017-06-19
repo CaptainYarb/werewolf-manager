@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>WWoMH - Manager</title>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="msapplication-config" content="none" />
+	<!-- Fonts -->
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
+	<link href="http://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
+	<!-- Style -->
+	<link rel="stylesheet" type="text/css" href="assets/css/reset.css">
+	<link rel="stylesheet" type="text/css" href="assets/css/app.css">
+	<link rel="stylesheet" type="text/css" href="assets/css/manage.css">
+</head>
+<body ng-app="manager">
+	<div ng-controller="manage">
+		<header ng-class="{covered: (action && action.type == 'display')}">
+			<div id="timer" class="hudItem right">
+				<i class="fa fa-clock-o"></i> TIME
+				<span>12m:36s</span>
+			</div>
+			<div id="round" class="hudItem right">
+				<i class="fa fa-circle-o-notch"></i> ROUND
+				<span ng-bind="round"></span>
+			</div>
+			<div id="timer" class="hudItem" ng-class="{fail: checkVillagerVictory()}">
+				<img src="assets/images/wolf.svg" height="14" width="14"> Werewolves
+				<span>{{playersWerewolvesAlive()}}/{{playersWerewolves()}}</span>
+			</div>
+			<div id="timer" class="hudItem" ng-class="{fail: checkWerewolfVictory()}">
+				<i class="fa fa-user"></i> Villagers
+				<span>{{playersVillagersAlive()}}/{{playersVillagers()}}</span>
+			</div>
+			<div id="timer" class="hudItem" ng-show="gameHasRole('piper')" ng-class="{win: checkPiperVictory()}">
+				<i class="fa fa-heart"></i> Charmed
+				<span>{{playersCharmed()}}/{{playersCharmable()}}</span>
+			</div>
+			<div id="reset" ng-click="resetGame()" ng-show="playing"><i class="fa fa-refresh"></i> <span>Reset Game</span></div>
+			<div id="start" ng-click="startGame()" ng-hide="playing"><i class="fa fa-play"></i> <span>Start Game</span></div>
+			<div class="clear"></div>
+		</header>
+		<footer>
+			<div id="menu">
+				<ul>
+					<li ng-class="{active: page == 'round'}"><a href="" ng-click="goTo('round')"><i class="fa fa-circle-o-notch"></i> <span>Current Round</span></a></li>
+					<li ng-class="{active: page == 'players'}"><a href="" ng-click="goTo('players')"><i class="fa fa-users"></i> <span>Players</span></a></li>
+					<li ng-class="{active: page == 'settings'}"><a href="" ng-click="goTo('settings')"><i class="fa fa-cog"></i> <span>Settings</span></a></li>
+				</ul>
+			</div>
+		</footer>
+		<div id="round" ng-show="page == 'round'">
+			<div class="modal" ng-show="action">
+				<div class="modalBox">
+					<h3>{{action.title}} <span class="done" ng-click="action=false">Done</span></h3>
+					<div ng-show="action.type == 'display'" id="userDisplay">
+						<h1 ng-class="{vertCenter: action.showRole == false}" ng-bind="getNightPlayer(action.displayType).name"></h1>
+						<!-- <img ng-show="action.showRole" ng-src="assets/images/roles/{{getNightPlayer(action.displayType).role}}.png" /> -->
+						<h2 ng-show="action.showRole" ng-class="getNightPlayer(action.displayType).role" ng-bind="roles[getNightPlayer(action.displayType).role].name"></h2>
+					</div>
+					<div ng-show="action.type == 'thief'">
+						<div class="form">
+							<label>Role:</label>
+							<select class="role" ng-model="managePlayer.role" ng-options="roleID as role.name for (roleID, role) in availableRoles(managePlayer)"></select>
+							<span class="save">Save</span>
+						</div>
+					</div>
+					<div ng-show="action.type == 'player'">
+						<ul class="selectPlayer">
+							<li ng-repeat="player in players" ng-hide="player.alive == false || isCurrentPlayerTurn(player) || action.team == roles[player.role].team" ng-class="{selected: isSelectedPlayer(player) == true}" ng-click="selectPlayer(player)">
+								<strong ng-bind="player.name"></strong>
+								<span ng-bind="roles[player.role].name"></span>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="progress" ng-hide="players.length == 0">
+				<div id="today" class="current" ng-hide="turn">
+					<span><i class="fa fa-sun-o"></i> Day - Round {{round}}</span>
+				</div>
+				<div id="nextNight" class="next" ng-hide="turn" ng-click="beginNight()">
+					<span><i class="fa fa-moon-o"></i> Next Night</span>
+					<i class="fa fa-chevron-right"></i>
+				</div>
+
+				<div id="today" class="current" ng-show="turn">
+					<span><i class="fa fa-moon-o"></i> Night {{round}} - Turn: {{turn.shortTitle}}</span>
+				</div>
+				<div id="nextNight" class="next" ng-show="turn" ng-click="nextTurn()">
+					<span>Next: {{getNextTurnName()}}</span>
+					<i class="fa fa-chevron-right"></i>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="mainMsg" ng-show="players.length == 0">
+				<span>Waiting for players to join game...</span>
+			</div>
+			<div class="mainMsg" ng-show="round == 0 && !playing && players.length > 0">
+				<span>Waiting for game to be started...</span>
+			</div>
+			<div class="mainMsg" ng-show="round == 0 && playing">
+				<span>Waiting for first night...</span>
+			</div>
+			<div class="turnList" ng-show="playing && turn">
+				<div class="turn">
+					<h1 ng-bind="turn.title"></h1>
+					<p ng-bind="turn.desc"></p>
+					<ul id="manageActions">
+						<li ng-class="{inactive: canRunEvent(action) == false}" class="{{action}}" ng-repeat="action in turn.actions" ng-click="manageAction(action)" ng-bind="actions[action].title"></li>
+					</ul>
+				</div>
+				<ul id="turnLegend">
+					<li ng-repeat="listedTurn in turns" ng-class="{active: turn == listedTurn}" ng-show="(round == 1 || !listedTurn.firstNight) && (!listedTurn.role || gameHasRole(listedTurn.role))" ng-bind="listedTurn.shortTitle"></li>
+				</ul>
+			</div>
+		</div>
+		<div id="players" ng-show="page == 'players'">
+			<div id="managePlayer" class="modal" ng-show="managePlayer">
+				<div class="modalBox">
+					<h3>Manage: {{managePlayer.name}} <span class="done" ng-click="managePlayer = false">Done</span></h3>
+					<div class="form">
+						<label>Name:</label>
+						<input name="playername" class="name" ng-model="managePlayer.name"/>
+						<label>Role:</label>
+						<select class="role" ng-model="managePlayer.role" ng-options="roleID as role.name for (roleID, role) in availableRoles(managePlayer)"></select>
+					</div>
+					<h4>Actions</h4>
+					<ul class="playerActions">
+						<li ng-hide="managePlayer.alive" ng-click="revivePlayer(managePlayer)" class="revivePlayer">
+							<i class="fa fa-check"></i>
+							<span>Revive</span>
+						</li>
+						<li ng-show="managePlayer.alive" ng-click="killPlayer(managePlayer)" class="killPlayer">
+							<i class="fa fa-times"></i>
+							<span>Kill</span>
+						</li>
+						<li ng-if="gameHasRole('piper') && managePlayer.role != 'piper'" ng-show="managePlayer.charmed" ng-click="uncharmPlayer(managePlayer)" class="uncharmPlayer">
+							<i class="fa fa-unlink "></i>
+							<span>Uncharm</span>
+						</li>
+						<li ng-if="gameHasRole('piper') && managePlayer.role != 'piper'" ng-hide="managePlayer.charmed" ng-click="charmPlayer(managePlayer)" class="charmPlayer">
+							<i class="fa fa-star"></i>
+							<span>Charm</span>
+						</li>
+						<li ng-if="gameHasRole('cupid', true)" ng-hide="managePlayer.lover" ng-click="loverPlayer(managePlayer)" class="loverPlayer">
+							<i class="fa fa-heart"></i>
+							<span>Lover</span>
+						</li>
+						<li ng-if="gameHasRole('cupid', true)" ng-show="managePlayer.lover" ng-click="unloverPlayer(managePlayer)" class="unloverPlayer">
+							<i class="fa fa-chain-broken"></i>
+							<span>Breakup</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<a ng-hide="playing" href="" ng-click="addPlayer()" id="add"><i class="fa fa-plus-circle"></i> Add Player</a>
+			<span class="title"><i class="fa fa-users"></i> Manage Players</span>
+			<div class="clear"></div>
+			<div class="table">
+				<table>
+					<thead>
+						<tr>
+							<th class="nameCol">Player</th>
+							<th class="roleCol">Role</th>
+							<th class="statusCol"><span ng-show="playing">STATUS</span></th>
+						</tr>
+					</thead>
+					<tbody>
+					<tr ng-repeat="player in players | sortPlayers" ng-class="{edit: playing}" ng-click="setManagePlayer(player)">
+							<td class="nameCol">
+								<input ng-hide="playing" name="playername" class="name" ng-model="player.name"/>
+								<span ng-show="playing" class="label" ng-bind="player.name"></span>
+							</td>
+							<td class="roleCol">
+								<select ng-hide="playing" class="role" ng-model="player.role" ng-options="roleID as role.name for (roleID, role) in availableRoles(player)"></select>
+								<span ng-show="playing" class="label" ng-bind="roles[player.role].name"></span>
+							</td>
+							<td class="statusCol">
+								<div ng-show="playing && player.role">
+									<span ng-show="player.alive" class="status alive"><i class="fa fa-check"></i></span>
+									<span ng-hide="player.alive" class="status dead"><i class="fa fa-times"></i></span>
+									<span ng-show="player.charmed" class="status charmed"><i class="fa fa-star"></i></span>
+									<span ng-show="player.lover" class="status lover"><i class="fa fa-heart"></i></span>
+								</div>
+								<span ng-hide="playing" ng-click="removePlayer(player)" class="remove">Remove</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div id="settings" ng-show="page == 'settings'">
+			settings
+		</div>
+	</div>
+	<script type="text/javascript" src="assets/js/libs/angular/angular.min.js"></script>
+	<script type="text/javascript" src="assets/js/libs/angular/angular-touch.min.js"></script>
+	<script type="text/javascript" src="assets/js/app/manage/app.js"></script>
+	<script type="text/javascript" src="assets/js/app/manage/models.js"></script>
+	<script type="text/javascript" src="assets/js/app/manage/controllers.js"></script>
+</body>
+</html>

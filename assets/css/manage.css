@@ -1,0 +1,366 @@
+body{
+	position: relative;
+	padding:55px 0;
+}
+
+header{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 55px;
+	background: #fff;
+	color: #000
+}
+header #reset{
+	position: absolute;
+	left: 45%;
+	width: 100px;
+	background: rgba(0, 0, 0, 0.05);
+	padding: 15px;
+	text-align: center;
+	margin-top: 5px;
+	border-radius: 25px;
+}
+header #start{
+	position: absolute;
+	left: 45%;
+	width: 100px;
+	background: #35d020;
+	padding: 15px;
+	text-align: center;
+	margin-top: 5px;
+	border-radius: 25px;
+	color: #fff;
+}
+footer{
+	position: fixed;
+	bottom: 0;
+	left:0;
+	width: 100%;
+	height: 55px;
+	border-top: 4px solid #0ea7e7;
+	background: #0c8ec5; /* Old browsers */
+}
+footer #menu > ul > li{
+	float: left;
+}
+footer #menu > ul > li > a{
+	color: #fff;
+	display: block;
+	text-decoration: none;
+	font-size: 18px;
+	padding: 18px 30px;
+	background-color: rgba(0,0,0,0.1);
+	margin: 0 10px;
+}
+footer #menu > ul > li.active > a{
+	color: #0c8ec5;
+	background-color: #fff;
+}
+.hudItem{
+	float: left;
+	font-size: 12px;
+	font-weight: bold;
+	width: 100px;
+	height: 45px;
+	text-align: center;
+	padding-top:10px;
+}
+header.covered .hudItem{
+	opacity: 0;
+}
+.hudItem.right{
+	float: right;
+}
+.hudItem.fail{
+	color: white;
+	background: red;
+}
+.hudItem.win{
+	color: white;
+	background: rgb(53, 208, 32);
+}
+.hudItem img{
+	vertical-align: top;
+	position: relative;
+	bottom: 2px;
+}
+.hudItem span{
+	display: block;
+	font-weight: normal;
+	font-size: 18px;
+	margin-top: 5px;
+}
+
+.table{
+	background-color: rgba(0,0,0, 0.35);
+	min-height: 700px;
+}
+
+.table table{
+	width: 100%;
+}
+
+.table table thead tr th{
+	font-size: 32px;
+	text-transform: uppercase;
+	text-align: left;
+	border-bottom: 1px solid #fff;
+	padding: 15px;
+}
+
+.table table tbody tr td{
+	padding: 5px 15px;
+}
+.table table tbody tr td.edit{
+	background: rgba(0, 0, 0, 0.01);
+	border-bottom: 2px solid rgba(255, 255, 255, 0.02);
+}
+
+#players .title{
+	display: block;
+	text-decoration: none;
+	font-size: 62px;
+	color: rgba(255, 255, 255, 0.8);
+	font-weight: 300;
+	padding:25px 15px;
+}
+#players #add{
+	float: right;
+	display: block;
+	text-decoration: none;
+	font-size: 32px;
+	font-weight: 300;
+	color: #fff;
+	padding: 35px 25px 0 0;
+}
+#players table input.name,
+#players table select.role{
+	background: transparent;
+	border: 0;
+	color: #fff;
+	font-size: 24px;
+	border-bottom: 2px dashed rgba(255, 255, 255, 0.17);
+	box-sizing: border-box;
+	width: 100%;
+	margin: 0;
+	padding: 10px;
+}
+#players table input.name:focus,
+#players table select.role:focus{
+	outline: 0;
+	border-bottom: 2px solid #fff;
+}
+span.label{
+	display: block;
+	color: #fff;
+	font-size: 24px;
+	box-sizing: border-box;
+	width: 100%;
+	margin: 0;
+	padding: 10px;
+}
+#players select option{
+	color: #000;
+}
+#players .status{
+	font-size: 32px;
+	margin-right: 5px;
+}
+#players .status.alive{ color: rgb(0, 253, 0); }
+#players .status.dead{ color: red; }
+#players .status.charmed{ color: rgb(255, 232, 0); }
+#players .status.lover{ color: rgb(255, 62, 164); }
+
+#players .nameCol{
+	width: 50%;
+}
+#players .roleCol{
+	width: 30%;
+}
+#players .statusCol{
+	width: 20%;
+}
+
+.hide{
+	display: none;
+}
+.progress .current{
+	float: left;
+	background-color: rgba(255, 255, 255, 0.1);
+}
+.progress .next{
+	float: right;
+	background-color: #fff;
+	color:#000;
+	opacity: 0.6
+}
+.progress .current, .progress .next{
+	width: 50%;
+	padding: 20px 0;
+	text-align: center;
+	font-size: 16px;
+}
+.mainMsg > span{
+	font-size: 42px;
+	font-weight: 300;
+	text-align: center;
+	display: block;
+	margin-top: 20%;
+	position: relative;
+	bottom: 25%;
+}
+.playerActions{
+	margin: 15px;
+	padding: 15px;
+	background-color: rgba(0,0,0,0.05)
+}
+.playerActions > li{
+	padding: 5px;
+	margin: 10px;
+	background: rgb(216, 216, 216);
+	display: inline-block;
+	width: 105px;
+	height: 105px;
+	border-radius: 105px;
+	text-align: center;
+}
+.playerActions > li > .fa{
+	font-size: 42px;
+	padding: 20px 0 2px;
+}
+.playerActions > li > span{
+	display: block;
+	font-size: 18px;
+	font-weight: 300;
+}
+
+.playerActions > li.killPlayer{
+	background: rgb(199, 0, 0);
+	color: #fff;
+}
+.playerActions > li.revivePlayer{
+	background: rgb(0, 253, 0);
+	color: #fff;
+}
+.playerActions > li.charmPlayer{
+	background: rgb(255, 232, 0);
+}
+.playerActions > li.uncharmPlayer{
+	background: rgb(150, 150, 129);
+	color: #fff;
+}
+.playerActions > li.loverPlayer{
+	background: rgb(255, 62, 164);
+	color: #fff;
+}
+.turnList ul#turnLegend{
+	position: fixed;
+	bottom: 75px;
+	right: 0;
+	border: 2px solid rgba(255, 255, 255, 0.5);
+	border-bottom: 0;
+	width: 200px;
+}
+.turnList ul#turnLegend > li{
+	border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+	font-size: 18px;
+	text-transform: uppercase;
+	padding: 2px 5px;
+}
+.turnList ul#turnLegend > li.active{
+	border-bottom: 2px solid #fff;
+	background-color: #fff;
+	color: #000;
+	opacity: 0.5;
+	padding: 0 5px;
+}
+ul#manageActions{
+	position: absolute;
+	top: 375px;
+	left: 0;
+}
+ul#manageActions li{
+	padding: 25px;
+	font-size: 32px;
+	font-weight: 300;
+	background: rgba(255, 250, 250, 0.85);
+	width: 450px;
+	text-align: left;
+	margin-bottom: 0.5em;
+	color: rgb(84, 100, 139);
+}
+ul#manageActions li.witchPoison{
+	background: rgb(255, 183, 183);
+}
+ul#manageActions li.witchPotion{
+	background: rgb(213, 255, 222);
+}
+ul#manageActions li.inactive{
+background: rgba(0, 0, 0, 0.15) !important;
+}
+ul.selectPlayer li{
+	display: block;
+	width: 145px;
+	float: left;
+	padding: 15px;
+	margin: 10px;
+	background: rgb(236, 236, 236);;
+}
+ul.selectPlayer li strong{
+	font-size: 24px;
+	display: block;
+	color: rgb(29, 34, 48);
+}
+ul.selectPlayer li span{
+	text-transform: uppercase;
+	display: block;
+	padding: 5px;
+	color: rgb(126, 135, 142);
+	font-size: 14px;
+}
+ul.selectPlayer li.selected{
+	background: rgb(53, 208, 32);
+}
+ul.selectPlayer li.selected strong{
+	color: #fff;
+}
+ul.selectPlayer li.selected span{
+	color: rgba(255, 255, 255, 0.65);
+}
+#userDisplay h1{
+	text-align: center;
+	font-size: 72px;
+	padding: 0.25em 0;
+}
+#userDisplay h1.vertCenter {
+margin-top: 170px;
+}
+#userDisplay h2{
+	text-align: center;
+	font-size: 92px;
+}
+#userDisplay h2.werewolf{
+	color: red;
+}
+.turn{
+	text-align: center;
+	margin-top: 50px;
+}
+.turn h1{
+	font-size: 68px;
+	margin: 1em 0 0.25em;
+}
+
+.turn p{
+	line-height: 1.2em;
+	font-size: 24px;
+	margin: 1em 0;
+}
+.turn i{
+	font-size: 14px;
+	display: block;
+	opacity: 0.6;
+	margin-top: 125px;
+}
